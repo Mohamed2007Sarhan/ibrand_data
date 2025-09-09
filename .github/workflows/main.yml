@@ -1,0 +1,30 @@
+name: Clean Folders Except Public
+
+on:
+  workflow_dispatch: # لتشغيله يدويًا
+
+jobs:
+  cleanup:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Remove all folders except public
+      run: |
+        for dir in */ ; do
+          if [ "$dir" != "public/" ]; then
+            rm -rf "$dir"
+          fi
+        done
+
+    - name: Move data_new out of public
+      run: |
+        if [ -d "public/data_new" ]; then
+          mv public/data_new ./data_new
+        fi
+
+    - name: Remove public folder
+      run: |
+        rm -rf public
